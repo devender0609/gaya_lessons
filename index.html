@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>BizLearn — Business Lessons</title>
+  <link rel="icon" href="./assets/logo.svg?v=4.2"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css?v=4.2"/>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container bar">
+      <a class="brand" href="#home" data-nav="home">
+        <img class="logo" src="./assets/logo.svg?v=4.2" alt="logo"/>
+        <span>BizLearn</span>
+      </a>
+      <nav class="tabs" role="tablist">
+        <button class="tab active" data-nav="home">Home</button>
+        <button class="tab" data-nav="courses">Courses</button>
+        <button class="tab" data-nav="progress">Progress</button>
+      </nav>
+      <a class="btn primary" href="#courses" data-nav="courses">Start</a>
+    </div>
+  </header>
+
+  <section class="hero" data-section="home">
+    <div class="container hero-grid">
+      <div class="hero-copy card">
+        <h1>Learn faster. Grow smarter.</h1>
+        <p class="sub">Tap once to answer; the quiz auto‑advances and your circular progress updates live.</p>
+        <div class="cta">
+          <a class="btn primary" data-nav="courses">Browse courses</a>
+          <a class="btn" data-nav="progress">View progress</a>
+        </div>
+      </div>
+      <div class="stats card">
+        <div class="stat">
+          <div class="stat-number" id="statLessons">0</div>
+          <div class="stat-label">Courses</div>
+        </div>
+        <div class="ring-wrap">
+          <svg viewBox="0 0 120 120" class="ring">
+            <circle class="ring-track" cx="60" cy="60" r="54"></circle>
+            <circle class="ring-fill" id="ringOverall" cx="60" cy="60" r="54"
+              stroke-dasharray="339.292" stroke-dashoffset="339.292"></circle>
+            <text x="60" y="65" text-anchor="middle" class="ring-text" id="ringOverallText">0%</text>
+          </svg>
+          <div class="muted">Total progress</div>
+        </div>
+        <div class="stat">
+          <div class="pill"><span id="statCompleted">0</span>/<span id="statTotal">0</span> • <span id="statPercent">0%</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="container featured">
+      <h3 class="featured-title">Featured Courses</h3>
+      <section id="featuredGrid" class="grid"></section>
+    </div>
+  </section>
+
+  <main class="container" data-section="courses" hidden>
+    <div class="section-head">
+      <h2 class="title">Courses</h2>
+      <div class="filters">
+        <input id="search" class="input" placeholder="Search…">
+        <select id="level" class="input">
+          <option value="">All levels</option>
+          <option>Beginner</option>
+          <option>Intermediate</option>
+        </select>
+      </div>
+    </div>
+    <section id="courseGrid" class="grid"></section>
+  </main>
+
+  <section class="container" data-section="progress" hidden>
+    <div class="section-head"><h2 class="title">Your Progress</h2>
+      <div class="row-actions">
+        <button class="btn" id="resetAll">Reset Progress</button>
+      </div>
+    </div>
+    <div class="progress-grid">
+      <article class="card">
+        <h3>Total progress</h3>
+        <div class="ring-center">
+          <svg viewBox="0 0 120 120" class="ring">
+            <circle class="ring-track" cx="60" cy="60" r="54"></circle>
+            <circle class="ring-fill" id="ringOverall2" cx="60" cy="60" r="54"
+              stroke-dasharray="339.292" stroke-dashoffset="339.292"></circle>
+            <text x="60" y="65" text-anchor="middle" class="ring-text" id="ringOverallText2">0%</text>
+          </svg>
+        </div>
+        <p class="muted"><span id="doneCount">0</span> / <span id="totalCount">0</span> courses completed</p>
+      </article>
+      <article class="card">
+        <h3>Completed</h3>
+        <ul id="completedList" class="list"></ul>
+      </article>
+    </div>
+
+    <div class="section-head"><h2 class="title">Summary & Takeaways</h2></div>
+    <section class="summary-grid">
+      <article class="card">
+        <h3>Main Findings</h3>
+        <div id="synopsisText" class="synopsis"></div>
+      </article>
+      <article class="card">
+        <h3>Recommended Next Steps</h3>
+        <ul id="nextSteps" class="list"></ul>
+      </article>
+    </section>
+  </section>
+
+  <dialog id="quizModal" class="modal-root">
+    <form method="dialog" class="modal modal-compact" onsubmit="return false;">
+      <header class="modal-header">
+        <div class="pill">Quiz</div>
+        <div class="ring-mini">
+          <svg viewBox="0 0 60 60" class="ring r-sm">
+            <circle class="ring-track" cx="30" cy="30" r="26"></circle>
+            <circle class="ring-fill" id="ringFill" cx="30" cy="30" r="26" stroke-dasharray="163.363" stroke-dashoffset="163.363"></circle>
+            <text x="30" y="34" text-anchor="middle" class="ring-text" id="ringPct">0%</text>
+          </svg>
+        </div>
+        <button class="icon-btn" type="button" data-close aria-label="Close">✕</button>
+      </header>
+      <div id="quizBody" class="modal-body compact"></div>
+      <footer class="modal-footer">
+        <small class="muted">Tap an option to continue • Back to review</small>
+        <button id="prevBtn" class="btn" type="button">Back</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <script type="application/json" id="COURSE_DATA">[
+    {"id":"leadership","title":"Leadership Essentials","summary":"Inspire teams and resolve conflicts with empathy.","level":"Beginner","time":"5 min","quiz":[
+      {"q":"Leadership is mostly about…","options":["Influence","Authority","Titles"],"answerIndex":0,"tag":"leadership_basics"},
+      {"q":"Best conflict approach is…","options":["Avoid","Resolve calmly","Escalate"],"answerIndex":1,"tag":"conflict_resolution"},
+      {"q":"Great teams need…","options":["Trust","Luck","Perks"],"answerIndex":0,"tag":"teamwork_trust"},
+      {"q":"Feedback should be…","options":["Vague","Actionable","Delayed"],"answerIndex":1,"tag":"feedback"}
+    ]},
+    {"id":"marketing","title":"Marketing Foundations","summary":"Define your audience and value proposition clearly.","level":"Beginner","time":"6 min","quiz":[
+      {"q":"Marketing starts with…","options":["Product","Customer needs","Budget"],"answerIndex":1,"tag":"customer_focus"},
+      {"q":"A value prop highlights…","options":["Features","Customer benefits","Price only"],"answerIndex":1,"tag":"value_prop"},
+      {"q":"A CTA should be…","options":["Hidden","Clear and direct","Long"],"answerIndex":1,"tag":"cta"},
+      {"q":"Personas help you…","options":["Target messaging","Increase costs","Ignore segments"],"answerIndex":0,"tag":"personas"}
+    ]},
+    {"id":"finance","title":"Small-Business Finance","summary":"Understand cash flow, profits, and runway.","level":"Intermediate","time":"7 min","quiz":[
+      {"q":"Profit equals…","options":["Revenue - Costs","Revenue + Costs","Revenue only"],"answerIndex":0,"tag":"profit"},
+      {"q":"Positive cash flow means…","options":["More in than out","More out than in","Zero sales"],"answerIndex":0,"tag":"cashflow"},
+      {"q":"Runway is…","options":["Marketing budget","Time until money runs out","Inventory level"],"answerIndex":1,"tag":"runway"},
+      {"q":"To speed receivables…","options":["Invoice faster","Delay invoicing","Ignore terms"],"answerIndex":0,"tag":"receivables"}
+    ]}
+  ]</script>
+
+  <script src="./script.js?v=4.2" defer></script>
+</body>
+</html>
